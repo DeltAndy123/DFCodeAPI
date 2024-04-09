@@ -1,6 +1,6 @@
 import RAW_ACTION_DUMP from "./actiondump.json";
 import { ActionDump } from "./parseActionDump";
-const actions = new ActionDump(RAW_ACTION_DUMP);
+const actions = new ActionDump(RAW_ACTION_DUMP as ActionDumpJSON);
 
 type Method =
   | {
@@ -29,7 +29,7 @@ const methods: {
     search: (req, url) => {
       const results = ActionDump.search(
         actions.getJson().codeblocks,
-        (block: any) => [block.name, ...block.item.description],
+        (block) => [block.name, ...block.item.description],
         url.searchParams.get("q")?.toString()
       );
       return jsonResponse(results);
@@ -50,6 +50,7 @@ const methods: {
             ...event.aliases,
             event.icon.name,
             ...event.icon.description,
+            event.icon.requiredRank,
           ],
           query.toString()
         );
@@ -78,6 +79,8 @@ const methods: {
             action.icon.name,
             ...action.aliases,
             ...action.icon.description,
+            action.icon.requiredRank,
+            ...action.icon.worksWith,
           ],
           query.toString()
         );
